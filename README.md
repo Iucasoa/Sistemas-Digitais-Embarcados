@@ -65,3 +65,97 @@ Um neurônio artificial completo implementado em nível de portas lógicas para 
     ├── control.v               # FSM: Coordena os estados do treinamento
     ├── datapath.v              # Aritmética: Pesos, erro e soma ponderada
     └── top.v                   # Integração: Divisor de clock e IO de LEDs
+
+```
+
+## 📐 Arquitetura do Sistema
+
+### Máquina de Estados (FSM) - Perceptron
+O controle do neurônio segue o fluxo abaixo para garantir a convergência dos pesos:
+
+
+
+1. **INICIO:** Limpa todos os registros e contadores após o Reset.
+2. **ESPERA:** Realiza o cálculo da soma ponderada e aplica a função degrau.
+3. **FRENTE:** Verifica o erro e prepara a transição para a próxima amostra da porta OR.
+4. **VOLTA:** Atualiza os registros de pesos ($w_0, w_1$) e reinicia o ciclo se houver mais épocas.
+
+### Estrutura de Conexões (Pinagem ATmega328P)
+Para reproduzir o Módulo Arduino, utilize a seguinte configuração física:
+
+| Periférico | Pino Arduino | Registrador | Função |
+|------------|--------------|-------------|--------|
+| **Botão** | Digital 2    | `PD2 (INT0)`| Entrada com Interrupção |
+| **LED** | Digital 13   | `PB5`       | Saída de Status |
+
+---
+
+## 📊 Funcionamento do Hardware
+
+### Simulação de Sinais (Waveforms)
+Abaixo, a representação visual esperada no **GTKWave** ao observar a convergência dos pesos durante o treinamento:
+
+
+
+### Tabela de Verdade (Treinamento OR)
+O Perceptron ajusta os pesos síncronos ao clock para satisfazer a lógica:
+
+| Entrada A | Entrada B | Saída Esperada |
+|:---------:|:---------:|:--------------:|
+|     0     |     0     |        0       |
+|     0     |     1     |        1       |
+|     1     |     0     |        1       |
+|     1     |     1     |        1       |
+
+---
+
+## 🔧 Como Executar
+
+### 1. Arduino (AVR Bare-metal)
+- Abra o arquivo `.ino` desejado na **Arduino IDE**.
+- Certifique-se de selecionar a placa **Arduino Uno**.
+- Para os códigos "SemDelay", o botão deve estar obrigatoriamente no **Pino 2** (Interrupção Física).
+
+### 2. RTL Perceptron (Simulação)
+Para verificar o aprendizado do hardware via terminal utilizando o **Icarus Verilog**:
+
+```bash
+# 1. Compilar os módulos
+iverilog -o perceptron_sim top.v control.v datapath.v
+
+# 2. Executar a simulação
+vvp perceptron_sim
+
+```
+
+---
+
+## 🎓 Aprendizados Principais
+
+Durante o desenvolvimento deste projeto, foram explorados desafios reais de engenharia que conectam a teoria de algoritmos à realidade física do hardware:
+
+* **Manipulação Bare-metal:** Entendimento profundo de como a abstração de bibliotecas (como as do Arduino) consome ciclos de CPU. A programação direta via registradores provou ser essencial para sistemas de tempo real.
+* **Concorrência em Hardware (RTL):** Diferente de um processador sequencial, o design em Verilog permitiu que o cálculo da soma ponderada e a lógica de controle ocorressem em paralelo, otimizando o tempo de processamento neural.
+* **Tratamento de Sinais:** Implementação de estratégias de *debouncing* e sincronização de *clock* para garantir que entradas mecânicas (botões) não causem instabilidade na lógica digital.
+* **IA em Baixo Nível:** A implementação do Perceptron demonstrou que redes neurais simples podem ser aceleradas em hardware dedicado (FPGA/ASIC) sem a necessidade de sistemas operacionais complexos.
+
+---
+
+## 👨‍💻 Autor
+
+**Lucas Oassoa**
+* **GitHub:** [@Iucasoa](https://github.com/Iucasoa)
+* **Universidade:** UFERSA (Universidade Federal Rural do Semi-Árido)
+* **Curso:** Engenharia de Computação
+
+---
+
+## 📄 Licença
+
+Este projeto está licenciado sob a **Licença MIT**. Você é livre para usar, modificar e distribuir o código, desde que mantenha os créditos originais. Consulte o arquivo `LICENSE` para mais detalhes.
+
+---
+**Última atualização:** 2026-03-20
+
+
+
