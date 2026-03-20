@@ -1,35 +1,83 @@
-# Sistemas Digitais Embarcados
+# Comprehensive Analysis of the Repository Structure
 
-## Introdução  
-Este repositório contém uma coleção de projetos e arquivos relacionados a sistemas digitais embarcados, com foco na implementação e análise de diversas abordagens de programação e arquitetura.
+## Overview
+This repository contains several essential components related to Arduino codes and Verilog projects. The main folders include **Códigos Arduino** and **Projeto RTL - Perceptron**, each having its own distinct files and functionalities.
 
-## Estrutura do Repositório  
-- **/src**: Contém o código-fonte de todos os projetos. Cada subpasta representa um projeto específico, com seu próprio conjunto de arquivos.
-- **/docs**: Documentação detalhada, incluindo manuais de usuário e guias de instalação. Aqui você encontrará instruções sobre como configurar os ambientes de desenvolvimento e executar os projetos.
-- **/tests**: Contém arquivos de teste para validação dos projetos. Inclui scripts de testes automatizados e exemplos de como realizar testes manuais.
-- **README.md**: Este arquivo, que fornece uma visão geral do repositório, bem como instruções adicionais sobre como usar os arquivos neste repositório.
+---
 
-## Descrição dos Projetos  
-### Projeto 1: Controle de LED  
-O projeto LEDController é um exemplo simples que mostra como controlar LEDs usando um microcontrolador. O código está localizado em **/src/LEDController** e inclui as seguintes funcionalidades:
-- Controle de brilho usando PWM.
-- Mudança de cores usando um esquema RGB.
+## Códigos Arduino
+The **Códigos Arduino** folder includes the following files:
 
-### Projeto 2: Sensor de Temperatura  
-O projeto TempSensor utiliza um sensor de temperatura para coletar e exibir dados em tempo real. Localizado em **/src/TempSensor**, inclui:
-- Interface com o sensor DHT11.
-- Exibição de dados em um display LCD.
+1. **LampadaComDelay.ino**:
+   - This file implements a simple LED control with a delay. It exemplifies the blocking approach where the code execution halts during the delay.
+   - **Code Example**:
+     ```cpp
+     void loop() {
+         digitalWrite(LED_BUILTIN, HIGH);
+         delay(1000); // Blocking delay
+         digitalWrite(LED_BUILTIN, LOW);
+         delay(1000);
+     }
+     ```
 
-## Conceitos Técnicos  
-- **PWM (Modulação por Largura de Pulso)**: Uma técnica usada para controlar a quantidade de energia fornecida a dispositivos como LEDs.
-- **Sensor DHT11**: Um sensor de temperatura e umidade que fornece dados em formato digital para fácil leitura.
+2. **LampadaSemDelay.ino**:
+   - In contrast, this file demonstrates a non-blocking approach using the `millis()` function, allowing for multitasking.
+   - **Code Example**:
+     ```cpp
+     unsigned long previousMillis = 0;
+     void loop() {
+         unsigned long currentMillis = millis();
+         if (currentMillis - previousMillis >= 1000) {
+             previousMillis = currentMillis;
+             digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+         }
+     }
+     ```
 
-## Implementação  
-Cada projeto possui suas próprias diretrizes de implementação e configuração. Consulte a documentação na pasta /docs para detalhes específicos.
+3. **TrancaComDelay.ino**:
+   - Similar to LampadaComDelay, this sketch includes a delay in its operations, managing a locking mechanism with pauses.
 
-## Contribuições
-Contribuições são bem-vindas! Sinta-se à vontade para abrir problemas (issues) ou pull requests.  
-Agradecemos seus esforços para melhorar este repositório.  
+4. **TrancaSemDelay.ino**:
+   - This file is a non-blocking implementation of the lock mechanism, showcasing better responsiveness in Arduino applications.
 
-## Licença  
-Este projeto está licenciado sob a MIT License - veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+### Comparison
+The two pairs of files illustrate critical differences between blocking and non-blocking methods of coding in Arduino. Blocking methods can simplify code but lead to unresponsive behavior, while non-blocking methods foster more interactive applications, better suited for multi-tasking.
+
+---
+
+## Projeto RTL - Perceptron
+This folder includes Verilog implementable files that encapsulate the Perceptron model.
+
+### Files Breakdown
+1. **control.v**:
+   - This module manages the states of the FSM (Finite State Machine) during the Perceptron operations.
+   - **FSM States Explanation**:
+     - **State 1**: Initialization 
+     - **State 2**: Training 
+     - **State 3**: Testing 
+   - The state transitions depend on clock cycles and input signals, significantly driving the overall functionality.
+
+2. **datapath.v**:
+   - Responsible for data flow within the Perceptron, handling data inputs and outputs during processing.
+
+3. **top.v**:
+   - This is the top module that interconnects the `control` and `datapath` modules, integrating all submodules into one cohesive unit.
+   - **Hardware Integration Explanation**:
+     - Logic gates and registers will interoperate within this module to realize the complete hardware behavior of the Perceptron.
+
+### Perceptron Training Algorithm
+The Perceptron learning algorithm is a fundamental technique in supervised learning. It adjusts weights based on prediction errors, driving the model towards accuracy over iterations.
+
+---
+
+## Design Patterns
+Hardware/software design patterns implemented showcase strategies for effective management of resources in embedded systems. This repository embraces modular design principles, enabling better maintainability and reusability of code.
+
+---
+
+## Learning Outcomes
+Through the exploration of this repository, users will:
+- Understand both blocking and non-blocking programming concepts in Arduino.
+- Gain insights into FSM design and Verilog implementations.
+- Learn about the Perceptron algorithm and apply theoretical concepts in practical scenarios.
+--
