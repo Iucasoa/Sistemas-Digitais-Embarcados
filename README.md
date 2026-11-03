@@ -143,7 +143,6 @@ Durante o desenvolvimento deste projeto, foram explorados desafios reais de enge
 
 ## 👨‍💻 Autor
 
-**Lucas Oassoa**
 * **GitHub:** [@Iucasoa](https://github.com/Iucasoa)
 * **Universidade:** UFERSA (Universidade Federal Rural do Semi-Árido)
 * **Curso:** Engenharia de Computação
